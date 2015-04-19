@@ -1,11 +1,13 @@
-package com.test;
+package com.AlexsServlets;
 
 import java.io.IOException;
+
 import javax.servlet.http.*;
+
 import math.calculation.*;
 
 @SuppressWarnings("serial")
-public class EX3Servlet extends HttpServlet {
+public class AdvancedMathCalculationsEX3 extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		resp.setContentType("text/html");
@@ -48,7 +50,8 @@ public class EX3Servlet extends HttpServlet {
 
 		String resultStr = line1 + "<br>" +line2+ "<br>" +line3;
 		//add this string inside the response print line:
-		
+	    System.out.println("ex3 - resultSt1r = "+resultStr);
+
 		resp.getWriter().println(resultStr);
 	}
 }

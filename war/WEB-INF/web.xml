@@ -5,23 +5,35 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
-		<servlet-name>Test</servlet-name>
-		<servlet-class>com.test.TestServlet</servlet-class>
+		<servlet-name>MathCalculationsEX2</servlet-name>
+		<servlet-class>com.AlexsServlets.MathCalculationsEX2</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Test</servlet-name>
-		<url-pattern>/test</url-pattern>
+		<servlet-name>MathCalculationsEX2</servlet-name>
+		<url-pattern>/ex2</url-pattern>
 	</servlet-mapping>
 	
-		<servlet>
-		<servlet-name>EX3</servlet-name>
-		<servlet-class>com.test.EX3Servlet</servlet-class>
+	<servlet>
+		<servlet-name>AdvancedMathCalculationsEX3</servlet-name>
+		<servlet-class>com.AlexsServlets.AdvancedMathCalculationsEX3</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>EX3</servlet-name>
+		<servlet-name>AdvancedMathCalculationsEX3</servlet-name>
 		<url-pattern>/ex3</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>StockDetailsServletEX4</servlet-name>
+		<servlet-class>com.AlexsServlets.StockDetailsServletEX4</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StockDetailsServletEX4</servlet-name>
+		<url-pattern>/stockdetails</url-pattern>
+	</servlet-mapping>
+	
+	
+	/stockdetails
+	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
