@@ -31,8 +31,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/stockdetails</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>PortfolioServlet</servlet-name>
+		<servlet-class>com.TradeApp.stock.servlet.PortfolioServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PortfolioServlet</servlet-name>
+		<url-pattern>/portfolio</url-pattern>
+	</servlet-mapping>
 	
-	/stockdetails
+	
 	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
