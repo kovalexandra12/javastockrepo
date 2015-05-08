@@ -36,8 +36,6 @@ public class PortfolioManager {
 		portfolio.addStock(stock2);
 		portfolio.addStock(stock3);
 		
-		portfolio.setTitle("My Portfolio");
-		
 		return portfolio;
 		
 	}

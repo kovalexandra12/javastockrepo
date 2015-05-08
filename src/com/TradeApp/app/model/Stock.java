@@ -4,11 +4,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 
+ * this class holding stock elemnts
+ *
+ */
+
 public class Stock {
 	
 	private String symbol;
 	private float ask;
-	private float bid;
+	private double bid;
 	private Date date;
 	private int recommendation;
 	private int stockQuantity;
@@ -48,6 +54,16 @@ public class Stock {
 		this.bid = bid;
 	}
 	
+	public Stock(Stock oldStock)
+	{
+		this.symbol=oldStock.symbol;
+		this.ask=oldStock.ask;
+		this.bid=oldStock.bid;
+		this.date=oldStock.date;
+		this.recommendation=oldStock.recommendation;
+		this.stockQuantity=oldStock.stockQuantity;
+
+	}
 	
 
 //////////////////////////////////Methods////////////////////////////////////////////	
@@ -70,12 +86,12 @@ public class Stock {
     }
     
 //Bid setter and getter 
-    public float getBid() {
+    public double getBid() {
         return bid;
     }
 
-    public void setBid(float bid) {
-        this.bid = bid;
+    public void setBid(double d) {
+        this.bid = d;
     }
     
 //Date setter and getter 
@@ -89,7 +105,9 @@ public class Stock {
     
     
     
-    
+	/**
+	 * this method returns stock HTML summary 
+	 */
     public String getHtmlDescription(){
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		String dateStr = dateFormat.format(getDate());

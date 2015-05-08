@@ -10,7 +10,6 @@ import com.TradeApp.app.model.Portfolio;
 import com.TradeApp.app.model.Stock;
 import com.TradeApp.app.service.PortfolioManager;
 
-import math.calculation.*;
 
 @SuppressWarnings("serial")
 public class PortfolioServlet extends HttpServlet {
@@ -19,7 +18,20 @@ public class PortfolioServlet extends HttpServlet {
 		resp.setContentType("text/html");
 
 		PortfolioManager portfolioManager = new PortfolioManager();
-		Portfolio portfolio = portfolioManager .getPortfolio();
-		resp.getWriter().println(portfolio.getHtmlString());
+		Portfolio portfolio1 = portfolioManager .getPortfolio();
+		portfolio1.setTitle("Portfolio #1");
+
+		Portfolio portfolio2 = new Portfolio(portfolio1);
+		
+		portfolio2.setTitle("Portfolio #2");
+		resp.getWriter().println(portfolio1.getHtmlString());
+		resp.getWriter().println(portfolio2.getHtmlString());
+		portfolio1.removeStockAtIndex(0);
+		resp.getWriter().println(portfolio1.getHtmlString());
+		resp.getWriter().println(portfolio2.getHtmlString());
+		portfolio2.getStocks()[1].setBid(55.55);
+		resp.getWriter().println(portfolio1.getHtmlString());
+		resp.getWriter().println(portfolio2.getHtmlString());
+	
 	}
 }
