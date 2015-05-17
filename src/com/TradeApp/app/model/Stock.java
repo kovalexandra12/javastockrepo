@@ -16,14 +16,10 @@ public class Stock {
 	private float ask;
 	private double bid;
 	private Date date;
-	private int recommendation;
+	private ALGO_RECOMMENDATION recommendation;
 	private int stockQuantity;
 	
-	final int BUY = 0;
-	final int SELL = 1;
-	final int REMOVE = 2;
-	final int HOLD = 3;
-	
+	private enum ALGO_RECOMMENDATION{BUY,SELL,REMOVE,HOLD}
 
 	
 ///////////////////////////////////constructors /////////////////////////////////////
@@ -43,7 +39,7 @@ public class Stock {
 		this.bid = 0;
 		this.date = new Date();
 		this.stockQuantity = 0;
-		this.recommendation=-1;
+		this.recommendation=null;
 	}
 	
 	public Stock(String symbol,float ask,float bid)
@@ -101,9 +97,16 @@ public class Stock {
 
     public void setDate(Date date) {
         this.date = date;
-    }   
+    }  
     
     
+    public void setQuantity(int quantity ) {
+        this.stockQuantity = quantity;
+    }  
+    
+    public int getQuantity( ) {
+       return stockQuantity;
+    }    
     
 	/**
 	 * this method returns stock HTML summary 
@@ -115,7 +118,9 @@ public class Stock {
     		String output = "<b>The stock details are: </br> Symbol: </b> "+this.getSymbol()+
     						" </br> Ask: </b>" +this.getAsk()+
     						"</br> Bid: </b>" +this.getBid()+
-    						"</br> Date: </b>" +dateStr;
+    						"</br> Date: </b>" +dateStr+
+    						"</br> Quantity: </b>" +stockQuantity;
+    	
     
     		return output;
     	
