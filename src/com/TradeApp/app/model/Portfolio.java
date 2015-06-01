@@ -1,16 +1,12 @@
 package com.TradeApp.app.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-/**
- * 
- * this class holding portfolio elements
- *
- */
-public class Portfolio {
+import org.algo.exception.PortfolioException;
+import org.algo.model.PortfolioInterface;
+import org.algo.model.StockInterface;
+
+public class Portfolio implements PortfolioInterface {
 	private String title;
-	private final int MAX_PORTFOLIO_SIZE=5;
+    public final static int MAX_PORTFOLIO_SIZE=5;
 	private Stock[] stocks;
 	private int portfolioSize;
 	private float balance;
@@ -28,11 +24,20 @@ public class Portfolio {
 		this.portfolioSize=OldPortfolio.portfolioSize;
 		for (int i=0 ;i< portfolioSize ;i++ )
 		{
-			this.stocks[i]=new Stock(OldPortfolio.getStocks()[i]);
+			this.stocks[i]=new Stock((Stock) OldPortfolio.getStocks()[i]);
 		}
 	}
 	
-	public Stock[] getStocks(){
+	public Portfolio(Stock[] stockArray) {
+		this.stocks= new Stock[MAX_PORTFOLIO_SIZE];
+		portfolioSize=stockArray.length;
+		for (int i=0 ;i< stockArray.length ;i++ )
+		{
+			this.stocks[i]=new Stock((Stock)stockArray[i]);
+		}
+	}
+	
+	public StockInterface[] getStocks(){
 		return stocks;
 	}
 	
@@ -43,21 +48,35 @@ public class Portfolio {
 		boolean isExistingSymbol=false;
 		for(int i=0; i<portfolioSize;i++)
 		{
-			if(symbol == (stocks[i].getSymbol()) ){
+			if(symbol.equals(stocks[i].getSymbol()) ){
 				isExistingSymbol=true;
+				break;
 			}
 		}
 		return isExistingSymbol;
 	}
 	
+	public boolean IsPortfolioHasMaxSize() {
+		if (portfolioSize == MAX_PORTFOLIO_SIZE) {
+            
+			System.out.println("Can’t add new stock, portfolio can have only"
+					+ MAX_PORTFOLIO_SIZE + "stocks");
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * this method adding new stock to stock array
+	 * @throws PortfolioException 
 	 */
-	public void addStock(Stock stockToAdd){
+	public void addStock(Stock stockToAdd) throws PortfolioException{
 		
 		
 		if (portfolioSize == MAX_PORTFOLIO_SIZE){
-			System.out.println("Can’t add new stock, portfolio can have only" +MAX_PORTFOLIO_SIZE+ "stocks");
+			
+		//	System.out.println("Can’t add new stock, portfolio can have only" +MAX_PORTFOLIO_SIZE+ "stocks");
+			throw new PortfolioException("Can’t add new stock, portfolio size is on MAX size");
 		}
 		else{
 			 if (isStockExist(stockToAdd.getSymbol()) == false && stockToAdd.getSymbol() != null)
@@ -209,8 +228,9 @@ public class Portfolio {
 	}
 	/**
 	 * this method performs an action of stock buy .
+	 * @throws PortfolioException 
 	 */
-	public boolean buyStock(Stock stock, int quantity){
+	public boolean buyStock(Stock stock, int quantity) throws PortfolioException{
 		boolean isSuccess=true;
 		String symbol = stock.getSymbol();
 		if (checkIfStockExist(symbol)==true){
@@ -285,11 +305,21 @@ public class Portfolio {
 		int index=-1;
 		if (isStockExist(symbol)== true){
 			for (int i=0;i<portfolioSize;i++){
-				if(symbol == (stocks[i].getSymbol()) ){
+				if(symbol.equals(stocks[i].getSymbol()) ){
 				index =i;
 				}
 			}
 		}
 		return index;	
+	}
+
+	@Override
+	public String getTitle() {
+		
+		return title;
+	}
+	public static int getMaxSize() {
+		
+		return MAX_PORTFOLIO_SIZE ;
 	}
 }
