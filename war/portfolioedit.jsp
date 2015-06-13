@@ -104,7 +104,7 @@
 	
 		<div class="alert alert-danger hide" id="errormessagediv" role="alert">
 			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-			<span class="sr-only" >Error: </span> <span id="errormessagetextid">jjj</span>
+			<span class="sr-only" >Error: </span> <span id="errormessagetextid"></span>
 		</div>
 	
 		<p>

@@ -4,6 +4,12 @@ import org.algo.exception.PortfolioException;
 import org.algo.model.PortfolioInterface;
 import org.algo.model.StockInterface;
 
+import com.TradeApp.app.exception.BalanceException;
+import com.TradeApp.app.exception.PortfolioFullException;
+import com.TradeApp.app.exception.StockAlreadyExistsException;
+import com.TradeApp.app.exception.StockNotExistException;
+import com.TradeApp.app.exception.StockQuantityException;
+
 public class Portfolio implements PortfolioInterface {
 	private String title;
     public final static int MAX_PORTFOLIO_SIZE=5;
@@ -44,13 +50,12 @@ public class Portfolio implements PortfolioInterface {
 	/**
 	 * this method checking if the symbol already exist in the array
 	 */
-	private boolean isStockExist(String symbol){
+	private boolean isStockExist(String symbol) {
 		boolean isExistingSymbol=false;
 		for(int i=0; i<portfolioSize;i++)
 		{
 			if(symbol.equals(stocks[i].getSymbol()) ){
 				isExistingSymbol=true;
-				break;
 			}
 		}
 		return isExistingSymbol;
@@ -69,24 +74,28 @@ public class Portfolio implements PortfolioInterface {
 	/**
 	 * this method adding new stock to stock array
 	 * @throws PortfolioException 
+	 * @throws PortfolioFullException 
+	 * @throws StockAlreadyExistsException 
 	 */
-	public void addStock(Stock stockToAdd) throws PortfolioException{
-		
-		
-		if (portfolioSize == MAX_PORTFOLIO_SIZE){
-			
-		//	System.out.println("Can’t add new stock, portfolio can have only" +MAX_PORTFOLIO_SIZE+ "stocks");
-			throw new PortfolioException("Can’t add new stock, portfolio size is on MAX size");
+	public void addStock(Stock stockToAdd) throws PortfolioFullException,
+			StockAlreadyExistsException {
+
+		if (portfolioSize == MAX_PORTFOLIO_SIZE) {
+
+			// System.out.println("Can’t add new stock, portfolio can have only"
+			// +MAX_PORTFOLIO_SIZE+ "stocks");
+			throw new PortfolioFullException();
+		} else {
+			if (isStockExist(stockToAdd.getSymbol()) == false
+					&& stockToAdd.getSymbol() != null) {
+				stockToAdd.setQuantity(0);
+				stocks[portfolioSize] = stockToAdd;
+				portfolioSize++;
+			} else {
+				throw new StockAlreadyExistsException(stockToAdd.getSymbol());
+			}
 		}
-		else{
-			 if (isStockExist(stockToAdd.getSymbol()) == false && stockToAdd.getSymbol() != null)
-			 {
-					stockToAdd.setQuantity(0);				
-					stocks[portfolioSize] = stockToAdd;
-					portfolioSize++;
-			}
-			}
-		}		
+	}		
 	
 	  
 	/**
@@ -136,27 +145,28 @@ public class Portfolio implements PortfolioInterface {
 	 * this method removes stock and returns an update (true or false) on success.
 	 * return value: success= true
 	 * 				failure= false
+	 * @throws Exception 
 	 */	
-	public boolean removeStock(String symbol)
+	public void removeStock(String symbol) throws Exception
 	{
-		boolean isSucceedToRemove=false;
 		int index;
 		if (isStockExist(symbol)== true){
 			sellStock(symbol,-1);
 			index=getStockIndexBySymbol(symbol);
 			removeStockAtIndex(index);
-			isSucceedToRemove=true;
 			}
-		return isSucceedToRemove;
+		else{
+			throw new StockNotExistException(symbol);
+		}
 	}
 
 	/**
 	 * this method sells stock and returns an update (true or false) on success and updates the balance accordingly
 	 * return value: success= true
 	 * 				failure= false
+	 * @throws Exception 
 	 */	
-	public boolean sellStock(String symbol, int sellQuantity) {
-	boolean isSuccess=true;
+	public void sellStock(String symbol, int sellQuantity) throws Exception {
 	Stock stock = getStockBySymbol(symbol);
 	double refund;
 	int currentQuantity;
@@ -167,11 +177,11 @@ public class Portfolio implements PortfolioInterface {
 		stock.setQuantity(0);
 	}
 	else if (sellQuantity<-1 ){
-		isSuccess= false;
+		throw new Exception("quantity can't be less than -1");
 	}
 	else if (stock.getQuantity()< sellQuantity){
 		System.out.println("Not enough stocks to sell, you have " +currentQuantity+ " of this stock");
-		isSuccess= false;
+		throw new StockQuantityException(currentQuantity);
 	}
 	else if (stock.getQuantity()> sellQuantity)
 	{
@@ -180,7 +190,7 @@ public class Portfolio implements PortfolioInterface {
 		int leftQuantity=stock.getQuantity()-sellQuantity;
 		stock.setQuantity(leftQuantity);
 	}	
-	return isSuccess;
+	
 		
 	}
 	
@@ -202,18 +212,16 @@ public class Portfolio implements PortfolioInterface {
 	}
 	/**
 	 * this method updates portfolio balance
+	 * @throws BalanceException 
 	 */
-	public boolean updateBalance(double refund){
-		boolean isActionSuccseed;
+	public void updateBalance(double refund) throws BalanceException{
 		double newBalance= balance+refund;
 		if (newBalance<0){
-			isActionSuccseed=false;
+			throw new BalanceException((float) refund);
 		}
 		else{
-			isActionSuccseed=true;
 			balance= (float) newBalance;
 		}
-		return isActionSuccseed;
 	}	 
 	/**
 	 * this method checks if the portfolio has enough balance
@@ -229,20 +237,23 @@ public class Portfolio implements PortfolioInterface {
 	/**
 	 * this method performs an action of stock buy .
 	 * @throws PortfolioException 
+	 * @throws PortfolioFullException 
+	 * @throws StockAlreadyExistsException 
+	 * @throws BalanceException 
 	 */
-	public boolean buyStock(Stock stock, int quantity) throws PortfolioException{
-		boolean isSuccess=true;
+	public void buyStock(Stock stock, int quantity) throws  PortfolioFullException, StockAlreadyExistsException, BalanceException{
+		
 		String symbol = stock.getSymbol();
 		if (checkIfStockExist(symbol)==true){
-			isSuccess=buyStockHelper(stock,quantity);
+			buyStockHelper(stock,quantity);
 		}else{
 			addStock(stock);
-			isSuccess=buyStockHelper(stock,quantity);
+			buyStockHelper(stock,quantity);
 		}
-		return isSuccess;
+		
 	}
 
-	private boolean buyStockHelper (Stock stock,int quantity){
+	private boolean buyStockHelper (Stock stock,int quantity) throws BalanceException{
 		boolean isSuccess=true;
 		float payment;
 		int buyingAmount;
